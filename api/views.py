@@ -4,14 +4,15 @@ from rest_framework.decorators import api_view
 from rest_framework.request import Request  # Type Hinting
 from rest_framework.response import Response
 from rest_framework import status
-
 from .models import Order
+from .decorators import token_required
 
-# 通常這個會放在settings.py或是環境變數
+# # 通常這個會放在settings.py或是環境變數
 ACCEPTED_TOKEN = ('omni_pretest_token')
 
 
 @api_view(['POST'])  # 指定這個view只接受 POST 請求
+@token_required  # 放在api_view下方
 def import_order(request):
     """ 匯入訂單的API
 
@@ -39,13 +40,6 @@ def import_order(request):
                 { "error": "錯誤描述訊息" }
                 400 (請求無效) / 401 (未授權) / 409 (資源衝突)
     """
-    # 1. 驗證 access token
-    token = request.data.get('access_token')
-    if not token or token != ACCEPTED_TOKEN:
-        return Response(
-            {"error": "Invalid or missing access token"},
-            status=status.HTTP_401_UNAUTHORIZED  # 未授權
-        )
 
     # 2. 解析資料
     order_number = request.data.get('order_number')

@@ -3,7 +3,8 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
 from .models import Order
-from .views import ACCEPTED_TOKEN
+from django.conf import settings
+
 
 # Create your tests here.
 class OrderTestCase(APITestCase):
@@ -11,7 +12,7 @@ class OrderTestCase(APITestCase):
         # 先設定好要測試的URL以及有效的payload
         self.url = reverse('import_order')
         self.valid_payload = {
-            'access_token': ACCEPTED_TOKEN,
+            'access_token': settings.ACCEPTED_TOKEN,
             'order_number': 'TEST-ORDER-001',
             'total_price': '99.99'
         }
@@ -49,7 +50,7 @@ class OrderTestCase(APITestCase):
     def test_import_order_missing_field(self):
         """測試缺少必要欄位的情況"""
         payload = {
-            'access_token': ACCEPTED_TOKEN,
+            'access_token': settings.ACCEPTED_TOKEN,
             # 'order_number' is missing
             'total_price': '50.00'
         }

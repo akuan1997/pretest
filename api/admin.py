@@ -10,5 +10,4 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('order_number',)  # 搜尋框，訂單編號
 
 
-# admin.site.register(Order)
 admin.site.register(Order, OrderAdmin)
