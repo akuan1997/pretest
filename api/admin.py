@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order
+from .models import Order, Product
 
 
 # 建立一個繼承自 admin.ModelAdmin 的 class
@@ -10,4 +10,10 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('order_number',)  # 搜尋框，訂單編號
 
 
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'price')
+    search_fields = ('name',)
+
+
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Product, ProductAdmin)
