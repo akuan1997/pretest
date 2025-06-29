@@ -34,6 +34,21 @@ class OrderAdmin(admin.ModelAdmin):
 
             self.message_user(request, f'{updated_count}筆訂單的總價已成功更新。', messages.SUCCESS)
 
+    def save_related(self, request, form, formsets, change):
+        # 先呼叫父類別的原始 save_related 方法，讓 Django 先完成產品關係的儲存
+        super().save_related(request, form, formsets, change)
+
+        # form.instance 代表正在被編輯的 Order 物件
+        order = form.instance
+
+        # 執行和 action 中完全相同的計算邏輯
+        calculated_price = order.products.aggregate(total=Sum('price'))['total'] or 0
+
+        # 如果價格不一致，舊更新它
+        if order.total_price != calculated_price:
+            order.total_price = calculated_price
+            order.save()
+
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'price')
